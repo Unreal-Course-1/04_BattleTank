@@ -3,7 +3,14 @@
 #include "TankAimingComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "TankTurret.h"
+#include "TankBarrel.h"	/* We cannot do a Forward Delclaration here, we have to actually include the .h
+						   because in the line 58 we are calling a method of the class (so we actually need
+						   its code:
 
+										Barrel->GetForwardVector()
+						 */
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -15,26 +22,12 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet) {
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet) {	// Changed from UStaticMeshComponent to UTankBarrel
 	Barrel = BarrelToSet;
 }
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet) {
+	Turret = TurretToSet;
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
@@ -63,26 +56,22 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	if(bHaveAimSolution) {
 		auto AimDirection{ OutTossVelocity.GetSafeNormal() };
 
-		MoveBarrelTowards(AimDirection);
+		MoveGunTurretTowards(AimDirection);
+
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("%f: NO SOLUTION for projectile velocity"), GetWorld()->GetTimeSeconds());
 	}
 
 }
 
-void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection) {
+void UTankAimingComponent::MoveGunTurretTowards(FVector AimDirection) {
 
 	// Work-out difference between current barrel rotation and AimDirection
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator{ AimDirection.Rotation() };
 	auto DeltaRotator{ AimAsRotator - BarrelRotator };
 
-	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *DeltaRotator.ToString());
-	// Move the barrel the right amount this frame
-	// Given a max elevation speed and the frame rate
+	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(DeltaRotator.Yaw);
 
-
-	// Get static mesh for barrel
-	// Get static mesh for turret
-	// Calculate pitch movement for barrel
-	// Calculate yaw movement for turret
-	// Set new values
 }

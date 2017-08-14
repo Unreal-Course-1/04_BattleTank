@@ -2,6 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
+#include "Tank.h"
 
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
@@ -90,7 +91,7 @@ void ATankPlayerController::AimTowardsCrosshair() {
 	if (GetSightTraceHitLocation(HitLocation)) {
 		ThisTank->AimAt(HitLocation);
 	} else {
-		UE_LOG(LogTemp, Warning, TEXT("NOTHING is being hit"));
+		UE_LOG(LogTemp, Warning, TEXT("%f: NOTHING is being aimed at"), GetWorld()->GetTimeSeconds());
 	}
 	// If it hits the landscape
 		// Tell the controlled tank to aim at this poing

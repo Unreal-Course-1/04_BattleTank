@@ -4,8 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "TankAimingComponent.h"
 #include "Tank.generated.h"
+
+// Forward declarations
+class UTankBarrel;	// This does not seem necesary. It still compiles without errors if this line is commented
+class UTankTurret;
+class UTankAimingComponent;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -24,16 +28,18 @@ protected:
 public:	
 	// Sets default values for this pawn's properties
 	ATank();
-
+	/* Removing the Tick() method from ATank. The tank does nothing when ticking
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	*/
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void AimAt(FVector);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
+	void SetBarrelReference(UTankBarrel* BarrelToSet);
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurretReference(UTankTurret* TurretToSet);
 };
