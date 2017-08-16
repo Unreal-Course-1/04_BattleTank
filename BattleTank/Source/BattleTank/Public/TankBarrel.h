@@ -9,11 +9,12 @@
 /**
  * This is a Static Mesh Component (rather than an Actor Component, hint see inheritance)
  */
-UCLASS( meta = (BlueprintSpawnableComponent), hidecategories = ("Collision") ) // 
+UCLASS( meta = (BlueprintSpawnableComponent) )
 /*
 	1) Not 'ClassGroup = (Custom), ' before 'meta'; see UTankAimingComponent declaration.
 	   Yet it still appear grouped under Custom in the blueprint editor. 'Custom' may be just the default.
 	2) For hidding categories to the blueprint editor, we use the 'hidecategories' keyword
+		UCLASS( meta = (BlueprintSpawnableComponent), hidecategories = ("Collision") )
 */
 class BATTLETANK_API UTankBarrel : public UStaticMeshComponent
 {

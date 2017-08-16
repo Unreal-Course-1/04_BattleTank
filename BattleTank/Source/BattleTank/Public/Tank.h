@@ -17,7 +17,7 @@ class BATTLETANK_API ATank : public APawn
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 100000;	// TODO Find sensible default value of 100 m/s
+	float LaunchSpeed = 165000;	// TODO Find sensible default value of m/s
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,11 +35,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = Setup)
+		void SetBarrelReference(UTankBarrel* BarrelToSet);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+		void SetTurretReference(UTankTurret* TurretToSet);
+
 	void AimAt(FVector);
 
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTankTurret* TurretToSet);
+	UFUNCTION(BlueprintCallable, Category = Custom)
+	void Fire();
 };
