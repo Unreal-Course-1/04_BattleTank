@@ -29,6 +29,8 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 
 	ATank* GetControlledTank() const;
 
+	// Another way to get the hit location of the crosshair aiming point
+	bool GetSightTraceHitLocation2(FVector&) const;
 	// Return OUT parameter, true if hit landscape
 	bool GetSightTraceHitLocation(FVector&) const;
 

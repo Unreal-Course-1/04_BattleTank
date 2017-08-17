@@ -28,6 +28,34 @@ ATank* ATankPlayerController::GetControlledTank() const {
 	return Cast<ATank>(GetPawn());
 }
 
+//
+bool ATankPlayerController::GetSightTraceHitLocation2(FVector& OutHitLocation) const {
+
+	/* 1º) Same as below (next function).
+	 */
+	int32 ViewportSizeX, ViewportSizeY;
+	GetViewportSize(ViewportSizeX, ViewportSizeY);
+	auto ScreenLocation{ FVector2D{ ViewportSizeX * CrossHairXLocation, ViewportSizeY * CrossHairYLocation } };
+	/* 2º) Not need to "De-project"
+	 */
+
+	/* 3) Line-trace along that look direction, and see what we hit (up to max range)
+	 */
+	FHitResult HitResult;
+	// Simple collision will be used. Player's tank will be ignored
+	FCollisionQueryParams CollisionParameters{ FName{ TEXT("Crosshair") }, false, GetPawn() };
+	if (GetHitResultAtScreenPosition(ScreenLocation,
+									 ECollisionChannel::ECC_Camera,
+									 CollisionParameters,
+									 HitResult)) {
+		OutHitLocation = HitResult.ImpactPoint;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
 // Get world location of the linetrace through crosshair, true if it hits landscape
 bool ATankPlayerController::GetSightTraceHitLocation(FVector& OutHitLocation) const {
 
@@ -59,8 +87,8 @@ bool ATankPlayerController::GetSightTraceHitLocation(FVector& OutHitLocation) co
 	/* 3) Line-trace along that look direction, and see what we hit (up to max range)
 	*/
 	FHitResult HitResult;
-	// Complex collision will be used. Player's tank will be ignored
-	FCollisionQueryParams CollisionParameters{ FName{ TEXT("Crosshair") }, true, GetPawn() };
+	// Simple collision will be used. Player's tank will be ignored
+	FCollisionQueryParams CollisionParameters{ FName{ TEXT("Crosshair") }, false, GetPawn() };
 	/*
 	For the star location of the Line-trace we are using the camera location returned by "DeprojectScreenPositionToWorld()".
 	This is the position 'in the lens' of the camera.
@@ -88,7 +116,7 @@ void ATankPlayerController::AimTowardsCrosshair() {
 	}
 	
 	FVector HitLocation;
-	if (GetSightTraceHitLocation(HitLocation)) {
+	if (GetSightTraceHitLocation2(HitLocation)) {
 		ThisTank->AimAt(HitLocation);
 	} else {
 		UE_LOG(LogTemp, Warning, TEXT("%f: NOTHING is being aimed at"), GetWorld()->GetTimeSeconds());
