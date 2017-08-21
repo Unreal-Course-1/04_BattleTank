@@ -24,7 +24,10 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	UTankBarrel* Barrel { nullptr };
 	UTankTurret* Turret{ nullptr };
 
+	/* We will pass the rotation directly.
 	void MoveGunTurretTowards(FVector);
+	*/
+	void MoveGunTurretTowards(FRotator);
 
 public:	
 	void AimAt(FVector, float);

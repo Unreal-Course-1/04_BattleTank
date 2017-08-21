@@ -10,6 +10,7 @@
 class UTankBarrel;	// This does not seem necesary. It still compiles without errors if this line is commented
 class UTankTurret;
 class UTankAimingComponent;
+class AProjectile;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -17,7 +18,13 @@ class BATTLETANK_API ATank : public APawn
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 165000;	// TODO Find sensible default value of m/s
+	float LaunchSpeed = 165000;	// The instructor uses 4000
+
+	UPROPERTY(EditAnywhere, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	// Local barrel reference for spawning projectile
+	UTankBarrel* Barrel{ nullptr };
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,10 +43,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetBarrelReference(UTankBarrel* BarrelToSet);
+	void SetBarrelReference(UTankBarrel* BarrelToSet);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetTurretReference(UTankTurret* TurretToSet);
+	void SetTurretReference(UTankTurret* TurretToSet);
 
 	void AimAt(FVector);
 
