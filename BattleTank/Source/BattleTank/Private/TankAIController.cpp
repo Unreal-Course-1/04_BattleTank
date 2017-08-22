@@ -7,18 +7,18 @@
 
 void ATankAIController::BeginPlay() {
 	Super::BeginPlay();
-
-	auto tank{ GetControlledTank() };
-	if (tank) {
-		UE_LOG(LogTemp, Warning, TEXT("AIController possesing: %s"), *(tank->GetName()));
-	} else {
+	// Getting THIS tank
+	ThisTank = Cast<ATank>(GetPawn());
+	if (!ThisTank) {
 		UE_LOG(LogTemp, Warning, TEXT("AIController NOT possesing a tank"));
 	}
+	// Getting the PLAYER tank
+	APlayerController* PlayerController{ GetWorld()->GetFirstPlayerController() };
+	if (PlayerController) {
+		PlayerTank = Cast<ATank>(PlayerController->GetPawn());
+	}
 
-	tank = GetPlayerTank();
-	if (tank) {
-		UE_LOG(LogTemp, Warning, TEXT("AIController got PlayerController tank: %s"), *(tank->GetName()));
-	} else {
+	if (!PlayerTank) {
 		UE_LOG(LogTemp, Warning, TEXT("AIController did NOT get the PlayerController tank"));
 	}
 }
@@ -26,26 +26,10 @@ void ATankAIController::BeginPlay() {
 void ATankAIController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 
-	ATank* ThisTank{ GetControlledTank() };
-	ATank* PlayerTank{ GetPlayerTank() };
 	if (ThisTank && PlayerTank) {
 		ThisTank->AimAt(PlayerTank->GetActorLocation());
+
+		ThisTank->Fire();	// TODO Limit firing rate
 	}
 
-}
-
-ATank* ATankAIController::GetControlledTank() const {
-
-	return Cast<ATank>(GetPawn());
-}
-
-ATank* ATankAIController::GetPlayerTank() const {
-	APlayerController* PlayerController { GetWorld()->GetFirstPlayerController() };
-	ATank* Tank{ nullptr };
-
-	if (PlayerController) {
-		Tank = Cast<ATank>(PlayerController->GetPawn());
-	}
-
-	return Tank;
 }

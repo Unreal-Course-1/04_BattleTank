@@ -15,14 +15,14 @@ ATank::ATank()
 	*/
 	PrimaryActorTick.bCanEverTick = false;
 	// No need to protect pointer as added at construction (?)
-	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
+	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName{ "Aiming Component" });
 }
 
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 /* Removing the Tick() method from ATank. The tank does nothing when ticking
@@ -58,13 +58,17 @@ void ATank::SetTurretReference(UTankTurret* TurretToSet) {
 }
 
 void ATank::Fire() {
-	UE_LOG(LogTemp, Warning, TEXT("FIRING MOTHERFUCKER!!!"));
 
-	if (!Barrel) {
-		return;
+	bool bIsReloaded{ (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds };
+
+	if (Barrel && bIsReloaded) {
+		auto Projectile{ GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,
+															 Barrel->GetSocketLocation(FName{ "Projectile" }),
+															 Barrel->GetSocketRotation(FName{ "Projectile" })) };
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+
+		LastFireTime = FPlatformTime::Seconds();
 	}
-	GetWorld()->SpawnActor<AProjectile>( ProjectileBlueprint,
-										 Barrel->GetSocketLocation(FName{ "Projectile" }),
-										 Barrel->GetSocketRotation(FName{ "Projectile" }) );
 	return;
 }
