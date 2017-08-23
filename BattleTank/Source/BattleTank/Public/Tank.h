@@ -17,16 +17,18 @@ class BATTLETANK_API ATank : public APawn
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 165000;	// The instructor uses 4000
 
-	UPROPERTY(EditAnywhere, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTimeInSeconds = 4;
 
 	// Local barrel reference for spawning projectile
 	UTankBarrel* Barrel{ nullptr };
 
-	float ReloadTimeInSeconds{ 4 };
 	double LastFireTime{ 0 };
 
 protected:
