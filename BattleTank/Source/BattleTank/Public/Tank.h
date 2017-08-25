@@ -11,6 +11,7 @@ class UTankBarrel;	// This does not seem necesary. It still compiles without err
 class UTankTurret;
 class UTankAimingComponent;
 class AProjectile;
+class UTankMovementComponent;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -36,6 +37,18 @@ protected:
 	virtual void BeginPlay() override;
 
 	UTankAimingComponent* TankAimingComponent{ nullptr };
+	/* 1º - Components appear at the left tab in the editor, there is not categories like in the right
+	 * details tab, or the contextual menu. So, even though the next doesn't give compilation
+	 * errors, it doesn't make sense:
+	 *
+	 *		UPROPERTY(BlueprintReadOnly, Category = Movement)
+	 */
+	 /* 2º - To do things differently the MovementComponent won't be passed down to the blueprint through inheritance,
+	 * but it will be added directly in the blueprint like an own component member. So following line is not necessary:
+	 *
+	 *		UPROPERTY(BlueprintReadOnly)
+	 *		UTankMovementComponent* TankMovementComponent = nullptr;
+	 */
 
 public:	
 	// Sets default values for this pawn's properties

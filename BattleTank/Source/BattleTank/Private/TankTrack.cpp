@@ -3,7 +3,6 @@
 #include "TankTrack.h"
 
 void UTankTrack::SetThrottle(float Throttle) {
-	UE_LOG(LogTemp, Warning, TEXT("%s throttle"), *GetName());
 
 	auto ForceApplied{ GetForwardVector() * Throttle * TrackMaxDrivingForce };
 	auto ForceLocation{ GetComponentLocation() };

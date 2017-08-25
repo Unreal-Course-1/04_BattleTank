@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
+#include "TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -16,6 +17,11 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 	// No need to protect pointer as added at construction (?)
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName{ "Aiming Component" });
+	/* To do things differently the MovementComponent won't be passed down to the blueprint through inheritance,
+	 * but it will be added directly in the blueprint like an own component member. So following line is not necessary:
+	 *
+	 *	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName{ "Movement Component" });
+	 */
 }
 
 // Called when the game starts or when spawned
