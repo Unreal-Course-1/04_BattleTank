@@ -6,6 +6,14 @@
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
 
+// Enum for aiming state
+UENUM()
+enum class EFiringState : uint8 {
+	Reloading,
+	Aiming,
+	Locked,
+};
+
 class UTankBarrel;	// Forward Declaration. The next comment below will appear in the Unreal Editor when hovering over
 class UTankTurret;
 
@@ -28,6 +36,12 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	void MoveGunTurretTowards(FVector);
 	*/
 	void MoveGunTurretTowards(FRotator);
+
+protected:
+
+	// Keeps the firing status of the main gun to update the widget aiming point color
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	EFiringState FiringState = EFiringState::Reloading;
 
 public:	
 	void AimAt(FVector, float);

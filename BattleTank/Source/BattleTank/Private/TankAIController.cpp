@@ -27,9 +27,12 @@ void ATankAIController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 
 	if (ThisTank && PlayerTank) {
+
+		MoveToActor(PlayerTank, AcceptanceRadius);
+
 		ThisTank->AimAt(PlayerTank->GetActorLocation());
 
-		ThisTank->Fire();	// TODO Limit firing rate
+		ThisTank->Fire();
 	}
 
 }

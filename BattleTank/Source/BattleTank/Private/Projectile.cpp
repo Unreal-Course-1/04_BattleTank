@@ -30,8 +30,8 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::LaunchProjectile(float Speed) {
 
-	auto Time{ GetWorld()->GetTimeSeconds() };
-	UE_LOG(LogTemp, Warning, TEXT("%f: FIRING!!! at speed: %f"), Time, Speed);
+	//auto Time{ GetWorld()->GetTimeSeconds() };
+	//UE_LOG(LogTemp, Warning, TEXT("%f: FIRING!!! at speed: %f"), Time, Speed);
 	/*
 	 * Remember the ForwardVector of the projectile has the rotation of the barrel when spawning the projectile.
 	 *		Tank.cpp line 67

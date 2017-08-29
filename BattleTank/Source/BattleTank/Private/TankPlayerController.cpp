@@ -115,8 +115,8 @@ void ATankPlayerController::AimTowardsCrosshair() {
 	FVector HitLocation;
 	if (GetSightTraceHitLocation2(HitLocation)) {
 		ThisTank->AimAt(HitLocation);
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("%f: NOTHING is being aimed at"), GetWorld()->GetTimeSeconds());
+	//} else {
+	//	UE_LOG(LogTemp, Warning, TEXT("%f: NOTHING is being aimed at"), GetWorld()->GetTimeSeconds());
 	}
 	// If it hits the landscape
 		// Tell the controlled tank to aim at this poing

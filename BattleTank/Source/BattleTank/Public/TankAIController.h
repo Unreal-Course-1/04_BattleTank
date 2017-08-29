@@ -21,4 +21,6 @@ class BATTLETANK_API ATankAIController : public AAIController
 	ATank* ThisTank{ nullptr };
 	ATank* PlayerTank{ nullptr };
 
+	UPROPERTY(EditDefaultsOnly)
+		float AcceptanceRadius = 5000; // How close to target the AI Tank should get, in cm.
 };

@@ -36,7 +36,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UTankAimingComponent* TankAimingComponent{ nullptr };
+	/* 3º - UPROPERTY(BlueprintReadOnly) was added AFTERWARDS of 1º and 2º comments bellow.
+	 * It's added so we can get a reference in the Tank Player Controller Blueprint that we can pass
+	 * to the Player UI Widget Blueprint, therefore being able to access the state of the barrel
+	 * (locked, reload, moving) and adjust the color of the aiming point in the screen.
+	 */
+	UPROPERTY(BlueprintReadOnly)
+	UTankAimingComponent* TankAimingComponent = nullptr;
 	/* 1º - Components appear at the left tab in the editor, there is not categories like in the right
 	 * details tab, or the contextual menu. So, even though the next doesn't give compilation
 	 * errors, it doesn't make sense:

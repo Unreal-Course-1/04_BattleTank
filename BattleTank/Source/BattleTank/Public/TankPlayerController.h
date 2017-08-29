@@ -27,8 +27,6 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 
 	virtual void Tick(float) override;
 
-	ATank* GetControlledTank() const;
-
 	// Another way to get the hit location of the crosshair aiming point
 	bool GetSightTraceHitLocation2(FVector&) const;
 	// Return OUT parameter, true if hit landscape
@@ -39,4 +37,9 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	the crosshair intersects the world
 	*/
 	void AimTowardsCrosshair();
+
+protected:
+
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	ATank* GetControlledTank() const;
 };
