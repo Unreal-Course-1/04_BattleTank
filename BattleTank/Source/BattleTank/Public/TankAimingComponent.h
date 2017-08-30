@@ -32,6 +32,9 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	UTankBarrel* Barrel { nullptr };
 	UTankTurret* Turret{ nullptr };
 
+	// Sets default values for this component's properties
+	UTankAimingComponent();
+
 	/* We will pass the rotation directly.
 	void MoveGunTurretTowards(FVector);
 	*/
@@ -46,9 +49,12 @@ protected:
 public:	
 	void AimAt(FVector, float);
 
-	// Sets default values for this component's properties
-	UTankAimingComponent();
+	// Refactoring from INHERIT aiming component to LOCAL aiming component
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void Initialize(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
+	/* Refactoring from INHERIT aiming component to LOCAL aiming component
 	void SetBarrelReference(UTankBarrel*);	// Changed from UStaticMeshComponent to UTankBarrel
 	void SetTurretReference(UTankTurret*);
+	*/
 };

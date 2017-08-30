@@ -22,6 +22,12 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
+// Refactoring from INHERIT aiming component to LOCAL aiming component
+void UTankAimingComponent::Initialize(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet) {
+	Turret = TurretToSet;
+	Barrel = BarrelToSet;
+}
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet) {	// Changed from UStaticMeshComponent to UTankBarrel
 	if (!BarrelToSet) {
 		return;
@@ -37,7 +43,7 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet) {
 	Turret = TurretToSet;
 	return;
 }
-
+*/
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	/* To get the location of a Static Mesh (Component? i.e. part of a Pawn blueprint):
 

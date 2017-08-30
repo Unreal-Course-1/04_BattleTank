@@ -5,7 +5,8 @@
 #include "Engine/World.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
-#include "TankMovementComponent.h"
+/* 2º - (things differently) MovementComponent won't be inherited
+#include "TankMovementComponent.h" */
 
 // Sets default values
 ATank::ATank()
@@ -16,7 +17,9 @@ ATank::ATank()
 	*/
 	PrimaryActorTick.bCanEverTick = false;
 	// No need to protect pointer as added at construction (?)
+	/* Refactoring from INHERIT aiming component to LOCAL aiming component
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName{ "Aiming Component" });
+	*/
 	/* To do things differently the MovementComponent won't be passed down to the blueprint through inheritance,
 	 * but it will be added directly in the blueprint like an own component member. So following line is not necessary:
 	 *
@@ -39,19 +42,22 @@ void ATank::Tick(float DeltaTime)
 
 }
 */
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
+NOTE this has nothing to do with the intended refactoring (I would say)
 // Called to bind functionality to input
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-
+*/
 void ATank::AimAt(FVector HitLocation) {
-
+	if (!TankAimingComponent) { return; }
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 	
 }
 
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 void ATank::SetBarrelReference(UTankBarrel* BarrelToSet) {	// Changed from UStaticMeshComponent to UTankBarrel
 
 	TankAimingComponent->SetBarrelReference(BarrelToSet);
@@ -62,7 +68,7 @@ void ATank::SetTurretReference(UTankTurret* TurretToSet) {
 
 	TankAimingComponent->SetTurretReference(TurretToSet);
 }
-
+*/
 void ATank::Fire() {
 
 	bool bIsReloaded{ (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds };
