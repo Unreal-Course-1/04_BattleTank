@@ -4,6 +4,7 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Tank.h"
+// Depends on movement component via pahtfinding system
 
 void ATankAIController::BeginPlay() {
 	Super::BeginPlay();
@@ -26,7 +27,7 @@ void ATankAIController::BeginPlay() {
 void ATankAIController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 
-	if (ThisTank && PlayerTank) {
+	if (ensure(ThisTank && PlayerTank)) {
 
 		MoveToActor(PlayerTank, AcceptanceRadius);
 

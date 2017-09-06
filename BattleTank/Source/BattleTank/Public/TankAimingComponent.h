@@ -44,7 +44,7 @@ protected:
 
 	// Keeps the firing status of the main gun to update the widget aiming point color
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Reloading;
+	EFiringState FiringState = EFiringState::Aiming;
 
 public:	
 	void AimAt(FVector, float);

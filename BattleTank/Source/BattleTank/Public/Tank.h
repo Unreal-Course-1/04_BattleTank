@@ -28,9 +28,6 @@ class BATTLETANK_API ATank : public APawn
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTimeInSeconds = 4;
 
-	// Local barrel reference for spawning projectile
-	UTankBarrel* Barrel{ nullptr };		// TODO Remove
-
 	double LastFireTime{ 0 };
 
 protected:
@@ -42,10 +39,15 @@ protected:
 	 * to the Player UI Widget Blueprint, therefore being able to access the state of the barrel
 	 * (locked, reload, moving) and adjust the color of the aiming point in the screen.
 	 */
-	/* Refactoring from INHERIT aiming component to LOCAL aiming component
-	UPROPERTY(BlueprintReadOnly)
-	*/
+	// Refactoring from INHERIT aiming component to LOCAL aiming component
+	//UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
+	//
 	UTankAimingComponent* TankAimingComponent = nullptr;
+
+	// Local barrel reference for spawning projectile
+	UPROPERTY(BlueprintReadWrite)
+	UTankBarrel* ParentBarrel = nullptr;		// TODO Remove
 
 	/* 1º - Components appear at the left tab in the editor, there is not categories like in the right
 	 * details tab, or the contextual menu. So, even though the next doesn't give compilation
@@ -71,11 +73,11 @@ public:
 	NOTE this has nothing to do with the intended refactoring (I would say)
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	*/
-	/* Refactoring from INHERIT aiming component to LOCAL aiming component
+	
+	// Refactoring from INHERIT aiming component to LOCAL aiming component
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetBarrelReference(UTankBarrel* BarrelToSet);
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetTurretReference(UTankTurret* TurretToSet);
 	*/

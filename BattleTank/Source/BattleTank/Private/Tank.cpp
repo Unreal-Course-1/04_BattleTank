@@ -31,7 +31,6 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 /* Removing the Tick() method from ATank. The tank does nothing when ticking
@@ -52,16 +51,16 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 */
 void ATank::AimAt(FVector HitLocation) {
-	if (!TankAimingComponent) { return; }
-	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
-	
+	if (ensure(TankAimingComponent)) {
+		TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
+	}
 }
 
 /* Refactoring from INHERIT aiming component to LOCAL aiming component
 void ATank::SetBarrelReference(UTankBarrel* BarrelToSet) {	// Changed from UStaticMeshComponent to UTankBarrel
 
 	TankAimingComponent->SetBarrelReference(BarrelToSet);
-	Barrel = BarrelToSet;
+	ParentBarrel = BarrelToSet;
 }
 
 void ATank::SetTurretReference(UTankTurret* TurretToSet) {
@@ -73,10 +72,10 @@ void ATank::Fire() {
 
 	bool bIsReloaded{ (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds };
 
-	if (Barrel && bIsReloaded) {
+	if ( ensure(ParentBarrel) && bIsReloaded) {
 		auto Projectile{ GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,
-															 Barrel->GetSocketLocation(FName{ "Projectile" }),
-															 Barrel->GetSocketRotation(FName{ "Projectile" })) };
+															 ParentBarrel->GetSocketLocation(FName{ "Projectile" }),
+															 ParentBarrel->GetSocketRotation(FName{ "Projectile" })) };
 
 		Projectile->LaunchProjectile(LaunchSpeed);
 
