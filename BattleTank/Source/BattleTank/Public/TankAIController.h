@@ -6,7 +6,9 @@
 #include "AIController.h"
 #include "TankAIController.generated.h"
 
-class ATank;
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
+class ATank;	*/
+class UTankAimingComponent;
 /**
  * 
  */
@@ -17,10 +19,15 @@ class BATTLETANK_API ATankAIController : public AAIController
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float) override;
+	/* Refactoring from INHERIT aiming component to LOCAL aiming component
+	 * These were Atank* before
+	 */
+	APawn* ThisTank{ nullptr };
+	APawn* PlayerTank{ nullptr };
 
-	ATank* ThisTank{ nullptr };
-	ATank* PlayerTank{ nullptr };
+	// Refactoring from INHERIT aiming component to LOCAL aiming component
+	UTankAimingComponent* AimingComponent{ nullptr };
 
 	UPROPERTY(EditDefaultsOnly)
-		float AcceptanceRadius = 5000; // How close to target the AI Tank should get, in cm.
+	float AcceptanceRadius = 5000; // How close to target the AI Tank should get, in cm.
 };

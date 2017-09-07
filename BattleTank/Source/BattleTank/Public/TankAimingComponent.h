@@ -16,6 +16,8 @@ enum class EFiringState : uint8 {
 
 class UTankBarrel;	// Forward Declaration. The next comment below will appear in the Unreal Editor when hovering over
 class UTankTurret;
+// Refactoring from INHERIT aiming component to LOCAL aiming component
+class AProjectile;
 
 // Holds barrel's properties and Elevate barrel
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -32,6 +34,18 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	UTankBarrel* Barrel { nullptr };
 	UTankTurret* Turret{ nullptr };
 
+	// Refactoring from INHERIT aiming component to LOCAL aiming component
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float LaunchSpeed = 165000;	// The instructor uses 4000
+
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float ReloadTimeInSeconds = 4;
+
+	double LastFireTime{ 0 };
+
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
@@ -44,10 +58,10 @@ protected:
 
 	// Keeps the firing status of the main gun to update the widget aiming point color
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Aiming;
+	EFiringState FiringState = EFiringState::Locked;
 
 public:	
-	void AimAt(FVector, float);
+	void AimAt(FVector);
 
 	// Refactoring from INHERIT aiming component to LOCAL aiming component
 	UFUNCTION(BlueprintCallable, Category = "Setup")
@@ -57,4 +71,6 @@ public:
 	void SetBarrelReference(UTankBarrel*);	// Changed from UStaticMeshComponent to UTankBarrel
 	void SetTurretReference(UTankTurret*);
 	*/
+	UFUNCTION(BlueprintCallable, Category = "Custom")
+	void Fire();
 };

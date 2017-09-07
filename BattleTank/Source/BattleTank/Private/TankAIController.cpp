@@ -3,37 +3,41 @@
 #include "TankAIController.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
-#include "Tank.h"
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
+#include "Tank.h"	*/
+#include "TankAimingComponent.h"
+
 // Depends on movement component via pahtfinding system
 
 void ATankAIController::BeginPlay() {
 	Super::BeginPlay();
 	// Getting THIS tank
-	ThisTank = Cast<ATank>(GetPawn());
-	if (!ThisTank) {
-		UE_LOG(LogTemp, Warning, TEXT("AIController NOT possesing a tank"));
-	}
+	/* Refactoring from INHERIT aiming component to LOCAL aiming component
+	ThisTank = Cast<ATank>(GetPawn());	*/
+	ThisTank = GetPawn();
 	// Getting the PLAYER tank
 	APlayerController* PlayerController{ GetWorld()->GetFirstPlayerController() };
-	if (PlayerController) {
-		PlayerTank = Cast<ATank>(PlayerController->GetPawn());
+	if (ensure(PlayerController)) {
+		/* Refactoring from INHERIT aiming component to LOCAL aiming component
+		PlayerTank = Cast<ATank>(PlayerController->GetPawn());	*/
+		PlayerTank = PlayerController->GetPawn();
 	}
-
-	if (!PlayerTank) {
-		UE_LOG(LogTemp, Warning, TEXT("AIController did NOT get the PlayerController tank"));
-	}
+	// Getting the Aiming Component of our tank
+	AimingComponent = ThisTank->FindComponentByClass<UTankAimingComponent>();
 }
 
 void ATankAIController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
-
 	if (ensure(ThisTank && PlayerTank)) {
-
 		MoveToActor(PlayerTank, AcceptanceRadius);
+		if (ensure(AimingComponent)) {
+			AimingComponent->AimAt(PlayerTank->GetActorLocation());
 
-		ThisTank->AimAt(PlayerTank->GetActorLocation());
-
-		ThisTank->Fire();
+			/* Refactoring from INHERIT aiming component to LOCAL aiming component
+			ThisTank->Fire();
+			*/
+			AimingComponent->Fire();
+		}
 	}
 
 }

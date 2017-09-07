@@ -11,6 +11,8 @@
 
 										Barrel->GetForwardVector()
 						 */
+// Refactoring from INHERIT aiming component to LOCAL aiming component
+#include "Projectile.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -44,7 +46,7 @@ void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet) {
 	return;
 }
 */
-void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
+void UTankAimingComponent::AimAt(FVector HitLocation) {
 	/* To get the location of a Static Mesh (Component? i.e. part of a Pawn blueprint):
 
 				UStaticMeshComponent* ->GetComponentLocation()
@@ -99,4 +101,24 @@ void UTankAimingComponent::MoveGunTurretTowards(FRotator AimRotation) {
 		Barrel->Elevate(DeltaRotator.Pitch);
 		Turret->Rotate(DeltaRotator.Yaw);
 	}
+}
+
+// Refactoring from INHERIT aiming component to LOCAL aiming component
+void UTankAimingComponent::Fire() {
+
+	if (ensure(Barrel && ProjectileBlueprint)) {
+
+		bool bIsReloaded{ (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds };
+		if (bIsReloaded) {
+			auto Projectile{ GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,
+																 Barrel->GetSocketLocation(FName{ "Projectile" }),
+																 Barrel->GetSocketRotation(FName{ "Projectile" })) };
+
+			Projectile->LaunchProjectile(LaunchSpeed);
+
+			LastFireTime = FPlatformTime::Seconds();
+		}
+
+	}
+	return;
 }

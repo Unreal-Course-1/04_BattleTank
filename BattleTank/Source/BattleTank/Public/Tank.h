@@ -8,9 +8,11 @@
 
 // Forward declarations
 class UTankBarrel;	// This does not seem necesary. It still compiles without errors if this line is commented
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 class UTankTurret;
 class UTankAimingComponent;
 class AProjectile;
+*/
 /* 2º - (things differently) MovementComponent won't be inherited
 class UTankMovementComponent; */
 
@@ -19,6 +21,7 @@ class BATTLETANK_API ATank : public APawn
 {
 	GENERATED_BODY()
 
+	/* Refactoring from INHERIT aiming component to LOCAL aiming component
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
@@ -29,25 +32,25 @@ class BATTLETANK_API ATank : public APawn
 	float ReloadTimeInSeconds = 4;
 
 	double LastFireTime{ 0 };
-
+	*/
 protected:
+	/* Refactoring from INHERIT aiming component to LOCAL aiming component
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	*/
 	/* 3º - UPROPERTY(BlueprintReadOnly) was added AFTERWARDS of 1º and 2º comments bellow.
 	 * It's added so we can get a reference in the Tank Player Controller Blueprint that we can pass
 	 * to the Player UI Widget Blueprint, therefore being able to access the state of the barrel
 	 * (locked, reload, moving) and adjust the color of the aiming point in the screen.
 	 */
-	// Refactoring from INHERIT aiming component to LOCAL aiming component
-	//UPROPERTY(BlueprintReadOnly)
-	UPROPERTY(BlueprintReadWrite)
-	//
+	/* Refactoring from INHERIT aiming component to LOCAL aiming component
+	UPROPERTY(BlueprintReadOnly)
 	UTankAimingComponent* TankAimingComponent = nullptr;
 
 	// Local barrel reference for spawning projectile
 	UPROPERTY(BlueprintReadWrite)
 	UTankBarrel* ParentBarrel = nullptr;		// TODO Remove
+	*/
 
 	/* 1º - Components appear at the left tab in the editor, there is not categories like in the right
 	 * details tab, or the contextual menu. So, even though the next doesn't give compilation
@@ -70,19 +73,19 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	*/
 	/* Refactoring from INHERIT aiming component to LOCAL aiming component
-	NOTE this has nothing to do with the intended refactoring (I would say)
+	NOTE this first function has nothing to do with the intended refactoring (I would say)
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
-	// Refactoring from INHERIT aiming component to LOCAL aiming component
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetBarrelReference(UTankBarrel* BarrelToSet);
 	
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetTurretReference(UTankTurret* TurretToSet);
-	*/
-	void AimAt(FVector);
 
+	void AimAt(FVector);
+	
 	UFUNCTION(BlueprintCallable, Category = "Custom")
 	void Fire();
+	*/
 };

@@ -1,10 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Tank.h"
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 #include "TankAimingComponent.h"
-#include "Engine/World.h"
-#include "TankBarrel.h"
 #include "Projectile.h"
+#include "TankBarrel.h"
+*/
+#include "Engine/World.h"
 /* 2º - (things differently) MovementComponent won't be inherited
 #include "TankMovementComponent.h" */
 
@@ -26,13 +28,13 @@ ATank::ATank()
 	 *	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName{ "Movement Component" });
 	 */
 }
-
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
+*/
 /* Removing the Tick() method from ATank. The tank does nothing when ticking
 // Called every frame
 void ATank::Tick(float DeltaTime)
@@ -50,13 +52,13 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 */
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 void ATank::AimAt(FVector HitLocation) {
 	if (ensure(TankAimingComponent)) {
 		TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 	}
 }
 
-/* Refactoring from INHERIT aiming component to LOCAL aiming component
 void ATank::SetBarrelReference(UTankBarrel* BarrelToSet) {	// Changed from UStaticMeshComponent to UTankBarrel
 
 	TankAimingComponent->SetBarrelReference(BarrelToSet);
@@ -67,7 +69,7 @@ void ATank::SetTurretReference(UTankTurret* TurretToSet) {
 
 	TankAimingComponent->SetTurretReference(TurretToSet);
 }
-*/
+
 void ATank::Fire() {
 
 	bool bIsReloaded{ (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds };
@@ -83,3 +85,4 @@ void ATank::Fire() {
 	}
 	return;
 }
+*/

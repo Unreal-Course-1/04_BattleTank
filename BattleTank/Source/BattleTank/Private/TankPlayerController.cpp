@@ -2,15 +2,21 @@
 
 #include "TankPlayerController.h"
 #include "Engine/World.h"
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 #include "Tank.h"
+*/
 #include "TankAimingComponent.h"
+
+ATankPlayerController::ATankPlayerController() {
+	//PrimaryComponentTick.bAllowTickBeforeBeginPlay = false;
+}
 
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
-	auto tank{ GetControlledTank() };
+	auto tank{ GetPawn() };
 	if (ensure(tank)) {
-		auto AimingComponent{ tank->FindComponentByClass<UTankAimingComponent>() };
+		AimingComponent = tank->FindComponentByClass<UTankAimingComponent>();
 		if (ensure(AimingComponent)) {
 			FoundAimingComponent(AimingComponent);
 		}
@@ -21,14 +27,15 @@ void ATankPlayerController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 
 	AimTowardsCrosshair();
+	// TODO Halt the execution of Tick() before the BeginPlay() event.
 	//UE_LOG(LogTemp, Warning, TEXT("TankPlayerController ticking at: %f"), DeltaSeconds);
 }
 
+/* Refactoring from INHERIT aiming component to LOCAL aiming component
 ATank* ATankPlayerController::GetControlledTank() const {
-
 	return Cast<ATank>(GetPawn());
 }
-
+*/
 //
 bool ATankPlayerController::GetSightTraceHitLocation2(FVector& OutHitLocation) const {
 
@@ -111,17 +118,14 @@ bool ATankPlayerController::GetSightTraceHitLocation(FVector& OutHitLocation) co
 
 void ATankPlayerController::AimTowardsCrosshair() {
 
-	ATank* ThisTank{ GetControlledTank() };
-	if (!ThisTank) {
-		return;
+	if (ensure(AimingComponent)) {
+
+		FVector HitLocation;
+		if (GetSightTraceHitLocation2(HitLocation)) {
+			AimingComponent->AimAt(HitLocation);
+			//} else {
+			//	UE_LOG(LogTemp, Warning, TEXT("%f: NOTHING is being aimed at"), GetWorld()->GetTimeSeconds());
+		}
+
 	}
-	
-	FVector HitLocation;
-	if (GetSightTraceHitLocation2(HitLocation)) {
-		ThisTank->AimAt(HitLocation);
-	//} else {
-	//	UE_LOG(LogTemp, Warning, TEXT("%f: NOTHING is being aimed at"), GetWorld()->GetTimeSeconds());
-	}
-	// If it hits the landscape
-		// Tell the controlled tank to aim at this poing
 }
