@@ -19,9 +19,34 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	//PrimaryComponentTick.bCanEverTick = true;	JMOR- Not Tick() fuction defined.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
+
 	// ...
+}
+
+void  UTankAimingComponent::BeginPlay() {
+	// So that first fire is after initial reload
+	LastFireTime = FPlatformTime::Seconds();
+}
+
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) {
+	
+	if ( (FPlatformTime::Seconds() - LastFireTime) <= ReloadTimeInSeconds) {
+		FiringState = EFiringState::Reloading;
+	} else if (IsBarrelMoving()) {
+		FiringState = EFiringState::Aiming;
+	} else {
+		FiringState = EFiringState::Locked;
+	}
+}
+
+bool UTankAimingComponent::IsBarrelMoving() {
+	if (ensure(Barrel)) {
+		auto BarrelForward{ Barrel->GetForwardVector().Rotation() };
+		return !BarrelForward.Equals(AimRotation, 0.01);
+	} else {
+		return false;
+	}
 }
 
 // Refactoring from INHERIT aiming component to LOCAL aiming component
@@ -75,12 +100,12 @@ void UTankAimingComponent::AimAt(FVector HitLocation) {
 
 			MoveGunTurretTowards(AimDirection);
 			*/
-			auto AimRotation{ OutTossVelocity.Rotation() };
+			AimRotation = OutTossVelocity.Rotation();
 
 			MoveGunTurretTowards(AimRotation);
 
-		} else {
-			UE_LOG(LogTemp, Warning, TEXT("%f: NO SOLUTION for projectile velocity"), GetWorld()->GetTimeSeconds());
+		//} else {
+		//	UE_LOG(LogTemp, Warning, TEXT("%f: NO SOLUTION for projectile velocity"), GetWorld()->GetTimeSeconds());
 		}
 	}
 }
@@ -106,10 +131,9 @@ void UTankAimingComponent::MoveGunTurretTowards(FRotator AimRotation) {
 // Refactoring from INHERIT aiming component to LOCAL aiming component
 void UTankAimingComponent::Fire() {
 
-	if (ensure(Barrel && ProjectileBlueprint)) {
+	if (FiringState != EFiringState::Reloading) {
+		if (ensure(Barrel && ProjectileBlueprint)) {
 
-		bool bIsReloaded{ (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds };
-		if (bIsReloaded) {
 			auto Projectile{ GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,
 																 Barrel->GetSocketLocation(FName{ "Projectile" }),
 																 Barrel->GetSocketRotation(FName{ "Projectile" })) };

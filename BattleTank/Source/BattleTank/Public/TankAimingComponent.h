@@ -53,12 +53,17 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	void MoveGunTurretTowards(FVector);
 	*/
 	void MoveGunTurretTowards(FRotator);
+	bool IsBarrelMoving();
+	FRotator AimRotation;
+
+	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 protected:
 
 	// Keeps the firing status of the main gun to update the widget aiming point color
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Locked;
+	EFiringState FiringState = EFiringState::Reloading;
 
 public:	
 	void AimAt(FVector);

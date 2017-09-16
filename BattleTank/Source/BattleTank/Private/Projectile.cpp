@@ -2,7 +2,7 @@
 
 #include "Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Engine/World.h"
+//#include "Engine/World.h"		// For GetWorld()
 
 // Sets default values
 AProjectile::AProjectile()
