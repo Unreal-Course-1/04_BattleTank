@@ -31,13 +31,24 @@ void  UTankAimingComponent::BeginPlay() {
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) {
 	
-	if ( (FPlatformTime::Seconds() - LastFireTime) <= ReloadTimeInSeconds) {
+	if (Anmo <= 0) {
+		FiringState = EFiringState::NoAnmo;
+	} else if ((FPlatformTime::Seconds() - LastFireTime) <= ReloadTimeInSeconds) {
 		FiringState = EFiringState::Reloading;
 	} else if (IsBarrelMoving()) {
 		FiringState = EFiringState::Aiming;
 	} else {
 		FiringState = EFiringState::Locked;
 	}
+}
+
+EFiringState UTankAimingComponent::GetFiringState() const {
+
+	return FiringState;
+}
+
+INT UTankAimingComponent::GetAnmo() const {
+	return Anmo;
 }
 
 bool UTankAimingComponent::IsBarrelMoving() {
@@ -131,7 +142,7 @@ void UTankAimingComponent::MoveGunTurretTowards(FRotator AimRotation) {
 // Refactoring from INHERIT aiming component to LOCAL aiming component
 void UTankAimingComponent::Fire() {
 
-	if (FiringState != EFiringState::Reloading) {
+	if (FiringState == EFiringState::Aiming || FiringState == EFiringState::Locked) {
 		if (ensure(Barrel && ProjectileBlueprint)) {
 
 			auto Projectile{ GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,
@@ -141,8 +152,11 @@ void UTankAimingComponent::Fire() {
 			Projectile->LaunchProjectile(LaunchSpeed);
 
 			LastFireTime = FPlatformTime::Seconds();
+			Anmo--;
+
 		}
 
 	}
 	return;
 }
+

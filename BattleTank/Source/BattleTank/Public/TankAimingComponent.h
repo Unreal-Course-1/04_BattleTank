@@ -12,6 +12,7 @@ enum class EFiringState : uint8 {
 	Reloading,
 	Aiming,
 	Locked,
+	NoAnmo
 };
 
 class UTankBarrel;	// Forward Declaration. The next comment below will appear in the Unreal Editor when hovering over
@@ -59,6 +60,8 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
+	int Anmo{ 5 };
+
 protected:
 
 	// Keeps the firing status of the main gun to update the widget aiming point color
@@ -78,4 +81,8 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "Custom")
 	void Fire();
+
+	EFiringState GetFiringState() const;
+	UFUNCTION(BlueprintCallable, Category = "Custom")
+	int GetAnmo() const;
 };

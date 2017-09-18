@@ -36,7 +36,9 @@ void ATankAIController::Tick(float DeltaSeconds) {
 			/* Refactoring from INHERIT aiming component to LOCAL aiming component
 			ThisTank->Fire();
 			*/
-			AimingComponent->Fire();
+			if (AimingComponent->GetFiringState() == EFiringState::Locked) {
+				AimingComponent->Fire();
+			}
 		}
 	}
 

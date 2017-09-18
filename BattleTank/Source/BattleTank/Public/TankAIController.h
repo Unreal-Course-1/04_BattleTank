@@ -28,6 +28,6 @@ class BATTLETANK_API ATankAIController : public AAIController
 	// Refactoring from INHERIT aiming component to LOCAL aiming component
 	UTankAimingComponent* AimingComponent{ nullptr };
 
-	UPROPERTY(EditDefaultsOnly)
-	float AcceptanceRadius = 5000; // How close to target the AI Tank should get, in cm.
+	UPROPERTY(EditDefaultsOnly, category = "Setup")
+	float AcceptanceRadius = 6500; // How close to target the AI Tank should get, in cm.
 };
