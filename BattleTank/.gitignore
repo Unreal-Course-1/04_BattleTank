@@ -388,7 +388,7 @@ Binaries/*
 DeriveDataCache/*
 Intermediate/*
 Saved/*
-Content/StarterContent/*
+#Content/StarterContent/*
 
 *.xcodeproj
 *.xcworkspace

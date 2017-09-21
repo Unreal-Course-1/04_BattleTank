@@ -47,7 +47,7 @@ EFiringState UTankAimingComponent::GetFiringState() const {
 	return FiringState;
 }
 
-INT UTankAimingComponent::GetAnmo() const {
+int32 UTankAimingComponent::GetAnmo() const {
 	return Anmo;
 }
 

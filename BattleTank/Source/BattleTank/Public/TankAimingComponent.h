@@ -45,6 +45,9 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float ReloadTimeInSeconds = 4;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	int32 Anmo = 5;
+
 	double LastFireTime{ 0 };
 
 	// Sets default values for this component's properties
@@ -59,8 +62,6 @@ class BATTLETANK_API UTankAimingComponent : public UActorComponent
 
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-
-	int Anmo{ 5 };
 
 protected:
 
@@ -84,5 +85,5 @@ public:
 
 	EFiringState GetFiringState() const;
 	UFUNCTION(BlueprintCallable, Category = "Custom")
-	int GetAnmo() const;
+	int32 GetAnmo() const;
 };
