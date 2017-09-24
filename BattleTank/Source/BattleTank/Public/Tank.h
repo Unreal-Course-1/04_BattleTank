@@ -21,18 +21,23 @@ class BATTLETANK_API ATank : public APawn
 {
 	GENERATED_BODY()
 
-	/* Refactoring from INHERIT aiming component to LOCAL aiming component
+		/* Refactoring from INHERIT aiming component to LOCAL aiming component
+		UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		TSubclassOf<AProjectile> ProjectileBlueprint;
+
+		UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float LaunchSpeed = 165000;	// The instructor uses 4000
+
+		UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float ReloadTimeInSeconds = 4;
+
+		double LastFireTime{ 0 };
+		*/
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+	int32 StartingHealth = 100;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float LaunchSpeed = 165000;	// The instructor uses 4000
-
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float ReloadTimeInSeconds = 4;
-
-	double LastFireTime{ 0 };
-	*/
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	int32 CurrentHealth = StartingHealth;
 protected:
 	/* Refactoring from INHERIT aiming component to LOCAL aiming component
 	// Called when the game starts or when spawned
@@ -88,4 +93,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Custom")
 	void Fire();
 	*/
+	// Called by the engine when Actor damage is delt
+	virtual float TakeDamage(float, struct FDamageEvent const &, class AController *, AActor *) override;
+
+	// For the Health bar widget. Return current health as a percentage of starting health, between 0 and 1.
+	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetHealthPercentage() const;
 };

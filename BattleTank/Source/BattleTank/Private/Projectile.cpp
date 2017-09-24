@@ -4,7 +4,10 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
-//#include "Engine/World.h"		// For GetWorld()
+#include "PhysicsEngine/RadialForceComponent.h"
+#include "Engine/World.h"		// For GetWorld()
+#include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -27,6 +30,9 @@ AProjectile::AProjectile()
 	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName{ "Projectile Impact Blast Particle System" });
 	ImpactBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	ImpactBlast->bAutoActivate = false;	// The blast at impact shouldn't be activated at start
+
+	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(FName{ "Explosion Force" });
+	ExplosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -59,4 +65,26 @@ void AProjectile::LaunchProjectile(float Speed) {
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) {
 	LaunchBlast->Deactivate();
 	ImpactBlast->Activate();
+	ExplosionForce->FireImpulse();
+	// Let's make the static mesh of the projectiles desappair
+	SetRootComponent(ImpactBlast);
+	CollisionMesh->DestroyComponent();
+	// Now we need to destroy the Actor, so it doesn't keep stacking projectiles in memory as we fire them
+	// GetWorld()->GetTimerManager(); <- I used the direct function.
+	FTimerHandle Timer;
+	GetWorldTimerManager().SetTimer(Timer, this, &AProjectile::DestroyProjectile, DelayDestroyProjectile);
+	// Apply damage to the hit tank
+	UGameplayStatics::ApplyRadialDamage(this,
+										ProjectileDamage,
+										GetActorLocation(),
+										ExplosionForce->Radius,
+										UDamageType::StaticClass(),
+										TArray<AActor*>()	// Damage all actors
+	);
+	return;
+}
+
+void AProjectile::DestroyProjectile() {
+
+	Destroy();
 }
