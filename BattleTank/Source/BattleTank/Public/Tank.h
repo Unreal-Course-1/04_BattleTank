@@ -6,6 +6,9 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+// Implementing DMCD (Dynamic MultiCast Delegate)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankDelegate);
+
 // Forward declarations
 class UTankBarrel;	// This does not seem necesary. It still compiles without errors if this line is commented
 /* Refactoring from INHERIT aiming component to LOCAL aiming component
@@ -37,12 +40,11 @@ class BATTLETANK_API ATank : public APawn
 	int32 StartingHealth = 100;
 
 	UPROPERTY(VisibleAnywhere, Category = "Health")
-	int32 CurrentHealth = StartingHealth;
+	int32 CurrentHealth;
 protected:
-	/* Refactoring from INHERIT aiming component to LOCAL aiming component
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	*/
+
 	/* 3º - UPROPERTY(BlueprintReadOnly) was added AFTERWARDS of 1º and 2º comments bellow.
 	 * It's added so we can get a reference in the Tank Player Controller Blueprint that we can pass
 	 * to the Player UI Widget Blueprint, therefore being able to access the state of the barrel
@@ -99,4 +101,7 @@ public:
 	// For the Health bar widget. Return current health as a percentage of starting health, between 0 and 1.
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealthPercentage() const;
+
+	// Implementing DMCD (Dynamic MultiCast Delegate)
+	FTankDelegate OnDeath;
 };

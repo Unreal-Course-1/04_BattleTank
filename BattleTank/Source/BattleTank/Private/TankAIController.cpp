@@ -6,6 +6,9 @@
 /* Refactoring from INHERIT aiming component to LOCAL aiming component
 #include "Tank.h"	*/
 #include "TankAimingComponent.h"
+// Implementing DMCD (Dynamic MultiCast Delegate)
+#include "Tank.h"
+#include "Mortar.h"
 
 // Depends on movement component via pahtfinding system
 
@@ -24,6 +27,25 @@ void ATankAIController::BeginPlay() {
 	}
 	// Getting the Aiming Component of our tank
 	AimingComponent = ThisTank->FindComponentByClass<UTankAimingComponent>();
+}
+
+// Implementing DMCD (Dynamic MultiCast Delegate)
+void ATankAIController::SetPawn(APawn* InPawn) {
+	Super::SetPawn(InPawn);
+
+	if (InPawn) {
+		auto PossessedPawn = Cast<ATank>(InPawn);
+		if (ensure(PossessedPawn)) {
+			PossessedPawn->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossessedPawnDeath);
+		}
+	}
+}
+// Implementing DMCD (Dynamic MultiCast Delegate)
+void ATankAIController::OnPossessedPawnDeath() {
+	auto Pawn{ GetPawn() };
+	if (Pawn) {
+		Pawn->DetachFromControllerPendingDestroy();
+	}
 }
 
 void ATankAIController::Tick(float DeltaSeconds) {

@@ -30,4 +30,9 @@ class BATTLETANK_API ATankAIController : public AAIController
 
 	UPROPERTY(EditDefaultsOnly, category = "Setup")
 	float AcceptanceRadius = 6500; // How close to target the AI Tank should get, in cm.
+
+	// Implementing DMCD (Dynamic MultiCast Delegate)
+	virtual void SetPawn(APawn*) override;
+	UFUNCTION()
+	void OnPossessedPawnDeath();
 };

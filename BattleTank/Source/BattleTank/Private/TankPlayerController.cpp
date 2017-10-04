@@ -6,6 +6,8 @@
 #include "Tank.h"
 */
 #include "TankAimingComponent.h"
+// Implementing DMCD (Dynamic MultiCast Delegate)
+#include "Tank.h"
 
 ATankPlayerController::ATankPlayerController() {
 	//PrimaryComponentTick.bAllowTickBeforeBeginPlay = false;
@@ -128,4 +130,20 @@ void ATankPlayerController::AimTowardsCrosshair() {
 		}
 
 	}
+}
+
+// Implementing DMCD (Dynamic MultiCast Delegate)
+void ATankPlayerController::SetPawn(APawn* InPawn) {
+	Super::SetPawn(InPawn);
+
+	if (InPawn) {
+		ATank* PossessedTank = Cast<ATank>(InPawn);
+		if (ensure(PossessedTank)) {
+			PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankPlayerController::OnPossessedTankDeath);
+		}
+	}
+}
+
+void ATankPlayerController::OnPossessedTankDeath() {
+	StartSpectatingOnly();
 }

@@ -28,13 +28,14 @@ ATank::ATank()
 	 *	TankMovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName{ "Movement Component" });
 	 */
 }
-/* Refactoring from INHERIT aiming component to LOCAL aiming component
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentHealth = StartingHealth;
 }
-*/
+
 /* Removing the Tick() method from ATank. The tank does nothing when ticking
 // Called every frame
 void ATank::Tick(float DeltaTime)
@@ -94,7 +95,8 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEv
 
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0) {
-		UE_LOG(LogTemp, Warning, TEXT("Tank died"));
+		// Implementing DMCD (Dynamic MultiCast Delegate)
+		OnDeath.Broadcast();
 	}
 
 	return DamageToApply;

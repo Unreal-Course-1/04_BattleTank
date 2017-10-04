@@ -42,6 +42,11 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 	*/
 	void AimTowardsCrosshair();
 
+	// Implementing DMCD (Dynamic MultiCast Delegate)
+	virtual void SetPawn(APawn* InPawn) override;
+	UFUNCTION()
+	void OnPossessedTankDeath();
+
 protected:
 	/* Refactoring from INHERIT aiming component to LOCAL aiming component
 	UFUNCTION(BlueprintCallable, Category = "Setup")
